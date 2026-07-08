@@ -1,31 +1,85 @@
 <!DOCTYPE html>
-<html lang ="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width , initial-scale=1.0">
-        <title>Random User Profile</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <div class="container">
-            <div class="profile-card">
-                <h1>Random User Profile</h1>
-                <div class="hidden" id="loader">
-                    Loading....
-                </div>
-                <img id="profile-image" src="" alt="Profile Image">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Directory</title>
 
-                <h2 id="name">Loading...</h2>
-                 <p id="email"></p>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-            <p id="city"></p>
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-            <p id="country"></p>
+</head>
 
-           
-            <button id="loadUser">
-                Load Another User
-            </button>
+<body>
+
+    <div class="container">
+
+        <h1>User Directory</h1>
+
+        <p class="subtitle">
+            Browse, search and manage random user profiles.
+        </p>
+
+        <div class="controls">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search by name..."
+            >
+
+            <select id="sort">
+
+                <option value="">Sort Users</option>
+
+                <option value="az">
+                    A → Z
+                </option>
+
+                <option value="za">
+                    Z → A
+                </option>
+
+            </select>
+
+            <select id="gender">
+
+                <option value="all">
+                    All Genders
+                </option>
+
+                <option value="male">
+                    Male
+                </option>
+
+                <option value="female">
+                    Female
+                </option>
+
+            </select>
+
+            <select id="country">
+
+                <option value="all">
+                    All Countries
+                </option>
+
+            </select>
+
+        </div>
+
+        <p id="userCount"></p>
+
+        <div id="loader" class="hidden">
+
+            Loading Users...
+
+        </div>
+
+        <div id="users-container">
 
         </div>
 

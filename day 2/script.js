@@ -1,46 +1,124 @@
-const profileImage = document.getElementById("profile-image");
-const name = document.getElementById("name");
-const email = document.getElementById("email");
-const city = document.getElementById("city");
-const country = document.getElementById("country");
-const button = document.getElementById("loadUser");
+const usersContainer = document.getElementById("users-container");
+const searchInput = document.getElementById("search");
+const sortSelect = document.getElementById("sort");
+const genderSelect = document.getElementById("gender");
+const countrySelect = document.getElementById("country");
 const loader = document.getElementById("loader");
+const userCount = document.getElementById("userCount");
 
-async function loadUser() {
+let users = [];
+let filteredUsers = [];
+let favourites = JSON.parse(localStorage.getItem("favourites")) || [];
+
+async function fetchUsers() {
+
+    loader.classList.remove("hidden");
+
     try {
-        loader.classList.remove("hidden");
-        const response = await fetch("https://randomuser.me/api/");
-        if (!response.ok) {
-            throw new Error("Failed to fetch user.");
-        }
+
+        const response = await fetch("https://randomuser.me/api/?results=20");
+
         const data = await response.json();
 
-    
-        const user = data.results[0];
+        users = data.results;
 
-        profileImage.src = user.picture.large;
-        profileImage.alt = `${user.name.first} ${user.name.last}`;
+        filteredUsers = [...users];
+        applyFilters();
+        populateCountries();
 
-        name.textContent = `${user.name.first} ${user.name.last}`;
+        console.log(users);
 
-        email.textContent = `${user.email}`;
+    } catch (error) {
 
-        city.textContent = `${user.location.city}`;
-
-        country.textContent = `${user.location.country}`;
+        console.log("Error:", error);
     }
-    catch (error) {
-        name.textContent = "Something went wrong!";
-        email.textContent = "";
-        city.textContent = "";
-        country.textContent = "";
+    loader.classList.add("hidden");
 
-        console.error(error);
-    }
-    finally {
-        loader.classList.add("hidden");
-    }
 }
 
-loadUser();
-button.addEventListener("click", loadUser);
+fetchUsers();
+
+function displayUsers(usersList) {
+    usersContainer.innerHTML = "";
+    userCount.textContent = `${usersList.length} Users Found`;
+    usersList.forEach(user => {
+        const isFavourite = favourites.includes(user.login.uuid);
+        const card = document.createElement("div");
+        card.className = "user-card";
+        card.innerHTML = `
+            <i class="fa-solid fa-heart favorite ${isFavourite ? "active" : ""}"></i>
+            <img src="${user.picture.large}" alt="${user.name.first}">
+            <h2>${user.name.first} ${user.name.last}</h2>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>City:</strong> ${user.location.city}</p>
+            <p><strong>Country:</strong> ${user.location.country}</p>
+        `;
+        const heart = card.querySelector(".favorite");
+        heart.addEventListener("click", () => {
+            toggleFavourite(user.login.uuid);
+        });
+        usersContainer.appendChild(card);
+    });
+}
+
+function applyFilters() {
+    filteredUsers = [...users];
+    const searchValue = searchInput.value.toLowerCase();
+    if (searchValue !== "") {
+        filteredUsers = filteredUsers.filter(user => {
+            const fullName =
+                `${user.name.first} ${user.name.last}`.toLowerCase();
+            return fullName.includes(searchValue);
+        });
+    }
+    if (genderSelect.value !== "all") {
+        filteredUsers = filteredUsers.filter(user =>
+            user.gender === genderSelect.value
+        );
+    }
+    if (countrySelect.value !== "all") {
+        filteredUsers = filteredUsers.filter(user =>
+            user.location.country === countrySelect.value
+        );
+    }  
+    if (sortSelect.value === "az") {
+        filteredUsers.sort((a, b) =>
+            a.name.first.localeCompare(b.name.first)
+        );
+    }
+    if (sortSelect.value === "za") {
+        filteredUsers.sort((a, b) =>
+            b.name.first.localeCompare(a.name.first)
+        );
+    }
+    displayUsers(filteredUsers);
+}
+
+function toggleFavourite(id) {
+    if (favourites.includes(id)) {
+        favourites = favourites.filter(item => item !== id);
+    } else {
+        favourites.push(id);
+    }
+    localStorage.setItem("favourites", JSON.stringify(favourites));
+    displayUsers(filteredUsers);
+}
+
+function populateCountries() {
+    const countries = [...new Set(users.map(user => user.location.country))];
+    countries.sort();
+    countries.forEach(country => {
+        const option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        countrySelect.appendChild(option);
+    });
+}
+
+searchInput.addEventListener("input", applyFilters);
+
+sortSelect.addEventListener("change", applyFilters);
+
+genderSelect.addEventListener("change", applyFilters);
+
+countrySelect.addEventListener("change", applyFilters);
