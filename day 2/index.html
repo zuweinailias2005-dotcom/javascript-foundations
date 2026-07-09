@@ -29,9 +29,10 @@
                 type="text"
                 id="search"
                 placeholder="Search by name..."
+                aria-label="Search Users..."
             >
 
-            <select id="sort">
+            <select id="sort" aria-label="Sort users">
 
                 <option value="">Sort Users</option>
 
@@ -45,7 +46,7 @@
 
             </select>
 
-            <select id="gender">
+            <select id="gender" aria-label="Filter by gender">
 
                 <option value="all">
                     All Genders
@@ -61,7 +62,7 @@
 
             </select>
 
-            <select id="country">
+            <select id="country" aria-label="Filter by country">
 
                 <option value="all">
                     All Countries
@@ -69,19 +70,27 @@
 
             </select>
 
+             <button id="refresh-btn" aria-label="Refresh user list">
+              <i class="fa-solid fa-rotate-right"></i>
+              Refresh Users
+        </button>
+
         </div>
 
         <p id="userCount"></p>
 
-        <div id="loader" class="hidden">
-
-            Loading Users...
-
-        </div>
-
+        <div id="loader" class="hidden"></div>
+        
         <div id="users-container">
 
         </div>
+
+        <div class="pagination">
+    <button id="prevBtn" aria-label="Go to previous page">Previous</button>
+    <span id="pageInfo"></span>
+    <button id="nextBtn" aria-label="Go to next page">Next</button>
+
+</div>
 
     </div>
 
