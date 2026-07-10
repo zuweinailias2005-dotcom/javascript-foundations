@@ -9,6 +9,7 @@ const refreshBtn = document.getElementById("refresh-btn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const pageInfo = document.getElementById("pageInfo");
+const clearSearchBtn = document.getElementById("clear-search");
 
 let users = [];
 let filteredUsers = [];
@@ -113,7 +114,7 @@ function updatePagination(totalUsers) {
 
 function applyFilters() {
     filteredUsers = [...users];
-    const searchValue = searchInput.value.toLowerCase();
+    const searchValue = searchInput.value.trim().toLowerCase();
     if (searchValue !== "") {
         filteredUsers = filteredUsers.filter(user => {
             const fullName =
@@ -212,4 +213,9 @@ nextBtn.addEventListener("click", () => {
         currentPage++;
         displayUsers(filteredUsers);
     }
+});
+
+clearSearchBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    applyFilters();
 });

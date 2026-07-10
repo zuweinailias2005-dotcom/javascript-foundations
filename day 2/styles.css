@@ -284,3 +284,18 @@ width:100%;
         background-position: 400px 0;
     }
 }
+
+#clear-search {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #e53935;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#clear-search:hover {
+    background-color: #c62828;
+}
